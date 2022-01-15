@@ -1,0 +1,57 @@
+var canvas = document.getElementById('canvas');
+//var ctx = canvas.getContext('2d');
+var pix1=[0,0,0], pix2=[0,0,0], pix3=[0,0,0];
+var i=0;
+var j=0;
+var k=0;
+var t=0;
+/*for(i=0;i<50;i++){;
+  for(j=0;j<50;j++){
+    pix.push(0);
+    pix.push(0);
+    pix.push(0);
+  }
+}*/
+var mid=[];
+var smooth=function(b){
+  mid=b;
+  for(i=0;i<b.length-2;i++){
+    mid[i+1]=(b[i]+b[i+2])/2;
+  }
+
+  return(mid);
+}
+var iter=function(a){
+  mid=[1];
+  for(i=0;i<a.length;i++){
+    mid[i]=(a[i]+1.5*Math.random()+4.3)%255;
+  }
+  mid[i]=a[i-1];
+  return(mid);
+};
+//console.log(iter([1,1,1]));
+draw=function(){
+  var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(i=0;i<canvas.height/2;i++){
+    for(j=0;j<canvas.width/2;j++){
+      ctx.fillStyle="rgb(0,0,0)";
+      ctx.fillStyle="rgb("+(pix1[(i*canvas.width/2+j)])+","+(pix2[(i*canvas.width/2+j)])+","+(pix3[(i*canvas.width/2+j)])+")";
+      ctx.fillRect(j*2,i*2,2,2);
+    }
+  }
+  //if(t<2550){
+    pix1=iter(pix1);
+    pix2=iter(pix2);
+    pix3=iter(pix3);
+  //}else{
+    pix1=smooth(pix1);
+    pix2=smooth(pix2);
+    pix3=smooth(pix3);
+  //}
+  //console.log(t);
+  t++;
+}
+//window.requestAnimationFrame(draw);
+var callback1 = setInterval(draw, 20);
