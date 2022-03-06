@@ -1,0 +1,128 @@
+//var ctx = canvas.getContext('2d');
+var pix1=[0,0,0], pix2=[0.75,0.75,0.75], pix3=[0.5,0.5,0.5];
+var i=0;
+var j=0;
+var k=0;
+var t=0;
+var p=[];
+var h=1;
+var s=1;
+var l=1;
+var mid1=0;
+var mid2=0;
+var mid3=0;
+var mid4=0;
+var p1=[0], p2=[0], p3=[0];
+var ip;
+/*for(i=0;i<50;i++){;
+  for(j=0;j<50;j++){
+    pix.push(0);
+    pix.push(0);
+    pix.push(0);
+  }
+}*/
+var mid=[];
+var smooth1d=function(b){
+  mid=b;
+  for(i=0;i<b.length-2;i++){
+    mid[i+1]=(b[i]+b[i+2])/2;
+  };
+  return(mid);
+};
+var smooth2d=function(c,q){
+  mid=c;
+  for(i=q;i<c.length-q;i++){
+    if(q<i<c.length-q-1&&0<i-(Math.floor((i-1)/q)*q)<q-1){
+      mid[i]=(c[i-q]+c[i-1]+(96*c[i])+c[i+1]+c[i+q])/100;
+    //}else if(0<i-(Math.floor(i/q)*q)<q-1){
+      //mid[i]=(c[i-1]+c[i]+c[i+1])/3;
+    };
+  };
+  return(mid);
+};
+var cscale=1.5;
+var hsl2rgb=function(h1,s1,l1){//0 <= inputs <= 1
+  mid1=h1*6;
+  mid2=s1*(1-Math.abs((2*l1)-1));
+  mid3=mid2*(1-Math.abs((mid1%2)-1));
+  mid4=l-mid2/2;
+  if(mid1<1){
+    return([255*(Math.min(1.5,mid2+mid4))/cscale,255*(Math.min(1.5,mid3+mid4))/cscale,255*(mid4)/cscale]);
+  }else if(mid1<2){
+    return([255*(Math.min(1.5,mid3+mid4))/cscale,255*(Math.min(1.5,mid2+mid4))/cscale,255*(mid4)/cscale]);
+  }else if(mid1<3){
+    return([255*(mid4)/cscale,255*(Math.min(1.5,mid2+mid4))/cscale,255*(Math.min(1.5,mid3+mid4))/cscale]);
+  }else if(mid1<4){
+    return([255*(mid4)/cscale,255*(Math.min(1.5,mid3+mid4))/cscale,255*(Math.min(1.5,mid2+mid4))/cscale]);
+  }else if(mid1<5){
+    return([255*(Math.min(1.5,mid3+mid4))/cscale,255*(mid4)/cscale,255*(Math.min(1.5,mid2+mid4))/cscale]);
+  }else{
+    return([255*(Math.min(1.5,mid2+mid4))/cscale,255*(mid4)/cscale,255*(Math.min(1.5,mid3+mid4))/cscale]);
+  } 
+};
+var iter=function(a,b,c){
+  mid=[[1],[1],[1]];
+  for(i=0;i<a.length;i++){
+    mid[0][i]=Math.abs((a[i]+0.0001))%1;
+    mid[1][i]=b[i];
+    mid[2][i]=c[i];
+  };
+  if(a.length<canvas.width*canvas.height/16){
+    mid[0][i]=a[i-1];
+    mid[1][i]=b[i-1];
+    mid[2][i]=c[i-1];
+  return(mid);
+  };
+};
+var iter2=function(a,b,c){
+  mid=[[1],[1],[1]];
+  for(i=0;i<a.length;i++){
+    mid[0][i]=Math.abs((a[i]+0.0001))%1;
+    mid[1][i]=b[i];
+    mid[2][i]=c[i];
+  };
+  if(a.length<canvas.width*canvas.height/16){
+    mid[0][i]=a[i-1];
+    mid[1][i]=b[i-1];
+    mid[2][i]=c[i-1];
+  return(mid);
+  };
+};
+draw=function(){
+  var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');
+  var w=canvas.width/4;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(i=0;i<canvas.height/4;i++){
+    for(j=0;j<canvas.width/4;j++){
+      ip=hsl2rgb((pix1[(i*canvas.width/4+j)]),(pix2[(i*canvas.width/4+j)]),(pix3[(i*canvas.width/4+j)]));
+      p1=ip[0];
+      p2=ip[1];
+      p3=ip[2];
+      ctx.fillStyle="rgb(0,0,0)";
+      ctx.fillStyle="rgb("+(p1)+","+(p2)+","+(p3)+")";
+      ctx.fillRect(j*4,i*4,4,4);
+    };
+  };
+  if(t<150*150+75){
+    /*pix1=iter(pix1);
+    pix2=iter(pix2);
+    pix3=iter(pix3);*/
+    p=iter2(pix1,pix2,pix3);
+    pix1=p[0];
+    pix2=p[1];
+    pix3=p[2];
+  }else{
+    pix1=smooth2d(pix1,w);
+    pix2=smooth2d(pix2,w);
+    pix3=smooth2d(pix3,w);
+  };
+  //ctx.fillStyle="rgb(255,0,255)"
+  //ctx.font="bold 20px serif";
+  //ctx.fillText(pix1[0]+","+pix2[0]+","+pix3[0],10,200);
+  //ctx.fillText(hsl2rgb(pix1[0],pix2[0],pix3[0]),10,240);
+  //ctx.fillText(hsl2rgb(0,1,0.5),10,280);
+  t++;
+};
+//window.requestAnimationFrame(draw);
+var callback1 = setInterval(draw, 20);
