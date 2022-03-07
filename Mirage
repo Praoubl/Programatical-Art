@@ -161,7 +161,7 @@ draw=function(){
       ctx.fillRect(mid.x*4,mid.y*4,4,4);
     };
   };
-  if(t<128*128+75){
+  if(t<128*128-1){
     /*pix1=iter(pix1);
     pix2=iter(pix2);
     pix3=iter(pix3);*/
