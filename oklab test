@@ -58,6 +58,11 @@ const convertLrgbToRgb = function( r, g, b, alpha){
 		g: Math.max(fn(g)*256,0),
 		b: Math.max(fn(b)*256,0)
 	};
+  if(Math.max(res.r,res.g,res.b)>256){
+    res.r=0;
+    res.g=0;
+    res.b=0;
+  };
 	if (alpha !== undefined) {res.alpha = alpha};
 	return res;
 };
@@ -201,15 +206,16 @@ var iter2=function(a,b,c,d){
   mid=[[1],[1],[1]];
   for(i=0;i<a.length;i++){
     mid[0][i]=0.5;
-    mid[1][i]=((Math.floor(i/128)/128)-0.5)*0.5;
-    mid[2][i]=(((i/128)%1)-0.5)*0.5;
+    mid[1][i]=((Math.floor(i/128)/128)-0.5)*0.8;
+    mid[2][i]=(((i/128)%1)-0.5)*0.8;
   };
-  if(a.length<canvas.width*canvas.height/16){
+  if(a.length<=canvas.width*canvas.height/16){
     mid[0][i]=a[i-1];
     mid[1][i]=b[i-1];
     mid[2][i]=c[i-1];
-  return(mid);
+    return(mid);
   };
+  return([a,b,c]);
 };
 draw=function(){
   var canvas = document.getElementById('canvas');
