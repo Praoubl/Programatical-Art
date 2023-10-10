@@ -204,17 +204,18 @@ var iter=function(a,b,c){
 };
 var iter2=function(a,b,c,d){
   mid=[[1],[1],[1]];
-  for(i=0;i<a.length;i++){
-    mid[0][i]=0.5;
+  for(i=0;i<1+canvas.width*canvas.height/16/*a.length*/;i++){
+    mid[0][i]=(Math.sin(d/1000)+1)/2;
     mid[1][i]=((Math.floor(i/128)/128)-0.5)*0.8;
     mid[2][i]=(((i/128)%1)-0.5)*0.8;
   };
-  if(a.length<=canvas.width*canvas.height/16){
+  /*if(a.length<=canvas.width*canvas.height/16){
     mid[0][i]=a[i-1];
     mid[1][i]=b[i-1];
     mid[2][i]=c[i-1];
     return(mid);
-  };
+  };*/
+  return(mid);
   return([a,b,c]);
 };
 draw=function(){
